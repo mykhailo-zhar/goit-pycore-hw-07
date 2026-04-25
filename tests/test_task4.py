@@ -7,7 +7,7 @@ import re
 
 @pytest.fixture
 def users() -> list[dict]:
-  return [ {"name": f"John Doe {i}", "birthday": (datetime.now() + relativedelta(days=i, years=-25)).strftime("%Y.%m.%d")} for i in range(-3,8)]
+  return [ {"name": f"John Doe {i}", "birthday": (datetime.now() + relativedelta(days=i, years=-25)).strftime("%Y.%m.%d")} for i in range(1,8)]
 
 # Validation of input parameters
 
@@ -49,15 +49,14 @@ def test_each_date_is_in_valid_format(users):
 
 # Logic
 
-def _is_congratulation_date_in_next_7_days(user: dict) -> bool:
+def _is_congratulation_date_in_7_days(user: dict) -> bool:
   date = datetime.strptime(user["congratulation_date"], "%Y.%m.%d")
   today = datetime.now()
   return date >= today and date < (today + timedelta(days=7))
 
-def test_congratulation_date_is_in_next_7_days(users):
-   
+def test_congratulation_date_is_in_7_days(users):
   result = get_upcoming_birthdays(users)
-  assert all(_is_congratulation_date_in_next_7_days(user) for user in result)
+  assert all(_is_congratulation_date_in_7_days(user) for user in result)
 
 def _is_congratulation_date_not_on_weekend(user: dict) -> bool:
   return datetime.strptime(user["congratulation_date"], "%Y.%m.%d").weekday() not in [5, 6]

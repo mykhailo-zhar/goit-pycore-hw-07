@@ -1,13 +1,19 @@
 import pytest
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-
 from tasks.task4 import get_upcoming_birthdays
+import time_machine
 import re
 
 @pytest.fixture
 def users() -> list[dict]:
   return [ {"name": f"John Doe {i}", "birthday": (datetime.now() + relativedelta(days=i, years=-25)).strftime("%Y.%m.%d")} for i in range(1,8)]
+
+dates = [
+  datetime(2026, 4, 26), 
+  datetime(2026, 5, 1), 
+  datetime(2026, 4, 23)
+]
 
 # Validation of input parameters
 
@@ -54,13 +60,17 @@ def _is_congratulation_date_in_7_days(user: dict) -> bool:
   today = datetime.now()
   return date >= today and date < (today + timedelta(days=7))
 
-def test_congratulation_date_is_in_7_days(users):
-  result = get_upcoming_birthdays(users)
-  assert all(_is_congratulation_date_in_7_days(user) for user in result)
+@pytest.mark.parametrize('date', dates)
+def test_congratulation_date_is_in_7_days(users, date):
+  with time_machine.travel(date):
+    result = get_upcoming_birthdays(users)
+    assert all(_is_congratulation_date_in_7_days(user) for user in result)
 
 def _is_congratulation_date_not_on_weekend(user: dict) -> bool:
   return datetime.strptime(user["congratulation_date"], "%Y.%m.%d").weekday() not in [5, 6]
 
-def test_congratulation_date_is_not_on_weekend(users):
-  result = get_upcoming_birthdays(users)
-  assert all(_is_congratulation_date_not_on_weekend(user) for user in result)
+@pytest.mark.parametrize('date', dates)
+def test_congratulation_date_is_not_on_weekend(users, date):
+  with time_machine.travel(date):
+    result = get_upcoming_birthdays(users)
+    assert all(_is_congratulation_date_not_on_weekend(user) for user in result)

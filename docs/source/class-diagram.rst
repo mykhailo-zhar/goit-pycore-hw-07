@@ -28,7 +28,7 @@ contact record, and address book container.
     +remove_phone(str phone) bool
     +edit_phone(str phone)
     +find_phone(str phone) Phone
-    +\__init__(self, Name name, List~phone~ phones = [])
+    +\__init__(self, Name name)
     +\__str__(self) str
   }
   class AddressBook {

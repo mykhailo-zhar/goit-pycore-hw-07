@@ -42,20 +42,21 @@ class Record:
 
         self._phones.append(phone_obj)
 
-    def remove_phone(self, phone: str):
+    def remove_phone(self, phone: str) -> bool:
         """
         Remove a phone from the record.
 
         Args:
             phone (str): The phone number to remove.
 
-        Raises:
-            ValueError: If the phone number is not found.
+        Returns:
+            bool: True if the phone number was removed, False otherwise.
         """
         phone_to_remove = self.find_phone(phone)
         if phone_to_remove is None:
-            raise ValueError(PHONE_NOT_FOUND_ERROR)
+            return False
         self._phones.remove(phone_to_remove)
+        return True
 
     def find_phone(self, phone: str) -> Phone | None:
         """

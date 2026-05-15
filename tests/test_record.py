@@ -54,14 +54,13 @@ def test_record_add_invalid_phone(record, invalid_phone):
 
 
 def test_record_remove_phone(record, valid_phone):
-    record.remove_phone(valid_phone.value)
+    assert record.remove_phone(valid_phone.value)
     assert valid_phone not in record._phones
 
 
 def test_record_remove_non_existent_phone(record, valid_phone):
     record.remove_phone(valid_phone.value)
-    with pytest.raises(ValueError):
-        record.remove_phone(valid_phone.value)
+    assert not record.remove_phone(valid_phone.value)
 
 
 def test_record_find_phone(record, valid_phone):

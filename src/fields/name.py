@@ -9,4 +9,11 @@ class Name(Field):
         Field: Base class for all fields.
     """
 
-    pass
+    def validate(self):
+        """
+        Validate the name.
+
+        Returns:
+            bool: True if the name is valid, False otherwise.
+        """
+        return isinstance(self.value, str) and self.value != ""

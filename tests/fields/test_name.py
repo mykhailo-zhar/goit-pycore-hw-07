@@ -1,3 +1,5 @@
+import pytest
+
 from src.fields.field import Field
 from src.fields.name import Name
 
@@ -16,5 +18,15 @@ def test_name_str():
     assert str(name) == "John Doe"
 
 
-def test_name_validate():
-    assert Name("John Doe").validate()
+@pytest.mark.parametrize(
+    "name, is_valid",
+    [
+        (10, False),
+        ("", False),
+        (None, False),
+        ("John Doe", True),
+        ("John Doe1", True),
+    ],
+)
+def test_name_validate(name, is_valid):
+    assert Name(name).validate() == is_valid

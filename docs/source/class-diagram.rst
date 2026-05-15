@@ -12,13 +12,13 @@ contact record, and address book container.
   class Field {
     # value
     +\__init__(self, value)
-    +validate(value) bool*
+    +validate(self) bool*
     +\__str__(self) str
   }
 
   class Name 
   class Phone {
-    +validate(value) bool
+    +validate(self) bool
   }
   class Record {
     # Name name
@@ -58,3 +58,8 @@ Relationships
 * **Field** is the base class; **Name** and **Phone** are subclasses.
 * **Record** has composition with **Name** (one required name) and **Phone** (a list of numbers).
 * **AddressBook** has composition with **Record** (a collection of contact entries).
+
+Logical errors
+-------------
+
+validate(value) should validate the instance value, not the value parameter.

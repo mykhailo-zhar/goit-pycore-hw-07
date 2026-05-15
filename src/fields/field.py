@@ -18,12 +18,9 @@ class Field:
         """
         return str(self.value)
 
-    def validate(self, value):
+    def validate(self):
         """
-        Validate the value
-
-        Args:
-            value: Value to validate.
+        Validate the instance value.
 
         Returns:
             bool: True if the value is valid, False otherwise.

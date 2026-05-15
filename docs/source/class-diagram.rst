@@ -10,7 +10,7 @@ contact record, and address book container.
   direction TB
 
   class Field {
-    # value
+    + value
     +\__init__(self, value)
     +validate(self) bool*
     +\__str__(self) str
@@ -21,8 +21,8 @@ contact record, and address book container.
     +validate(self) bool
   }
   class Record {
-    # Name name
-    # list~Phone~ phones
+    + Name name
+    + list~Phone~ phones
     
     +add_phone(str phone)
     +remove_phone(str phone) bool

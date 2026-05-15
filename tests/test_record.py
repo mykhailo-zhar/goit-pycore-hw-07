@@ -34,11 +34,11 @@ def record(valid_name, valid_phone):
 def test_record_init(valid_name, valid_phone):
     record = Record(valid_name)
     record.add_phone(valid_phone.value)
-    assert record._name.value == valid_name
-    assert valid_phone.value in [phone.value for phone in record._phones]
+    assert record.name.value == valid_name
+    assert valid_phone.value in [phone.value for phone in record.phones]
 
 
-def test_record_init_invalid_name(invalid_name, valid_phone):
+def test_record_init_invalid_name(invalid_name):
     with pytest.raises(ValueError):
         Record(invalid_name)
 
@@ -55,7 +55,7 @@ def test_record_add_invalid_phone(record, invalid_phone):
 
 def test_record_remove_phone(record, valid_phone):
     assert record.remove_phone(valid_phone.value)
-    assert valid_phone not in record._phones
+    assert valid_phone not in record.phones
 
 
 def test_record_remove_non_existent_phone(record, valid_phone):
@@ -72,8 +72,9 @@ def test_record_find_non_existent_phone(record, invalid_phone):
 
 
 def test_record_edit_phone(record, valid_phone):
-    record.edit_phone(valid_phone.value, "1234567891")
-    assert record.find_phone("1234567891").value == "1234567891"
+    phone_value = "1234567891"
+    record.edit_phone(valid_phone.value, phone_value)
+    assert record.find_phone(phone_value).value == phone_value
 
 
 def test_record_edit_non_existent_phone(record, valid_phone):

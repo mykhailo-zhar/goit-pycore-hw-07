@@ -20,8 +20,8 @@ class Record:
         name_obj = Name(name)
         if not name_obj.validate():
             raise ValueError("Name is required")
-        self._name = name_obj
-        self._phones = []
+        self.name = name_obj
+        self.phones = []
 
     def add_phone(self, phone: str):
         """
@@ -40,7 +40,7 @@ class Record:
         if self.find_phone(phone) is not None:
             raise ValueError(PHONE_ALREADY_EXISTS_ERROR)
 
-        self._phones.append(phone_obj)
+        self.phones.append(phone_obj)
 
     def remove_phone(self, phone: str) -> bool:
         """
@@ -55,7 +55,7 @@ class Record:
         phone_to_remove = self.find_phone(phone)
         if phone_to_remove is None:
             return False
-        self._phones.remove(phone_to_remove)
+        self.phones.remove(phone_to_remove)
         return True
 
     def find_phone(self, phone: str) -> Phone | None:
@@ -68,7 +68,7 @@ class Record:
         Returns:
             Phone | None: The phone object if found, None otherwise.
         """
-        return next((x for x in self._phones if x.value == phone), None)
+        return next((x for x in self.phones if x.value == phone), None)
 
     def edit_phone(self, old_phone, new_phone):
         """
@@ -83,7 +83,7 @@ class Record:
             ValueError: If the new phone number is not valid.
         """
         phone_index = next(
-            (i for i, x in enumerate(self._phones) if x.value == old_phone), None
+            (i for i, x in enumerate(self.phones) if x.value == old_phone), None
         )
         if phone_index is None:
             raise ValueError(PHONE_NOT_FOUND_ERROR)
@@ -92,4 +92,7 @@ class Record:
         if not new_phone_obj.validate():
             raise ValueError(PHONE_NOT_VALID_ERROR)
 
-        self._phones[phone_index] = new_phone_obj
+        self.phones[phone_index] = new_phone_obj
+
+    def __str__(self):
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"

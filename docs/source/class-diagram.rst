@@ -60,6 +60,6 @@ Relationships
 * **AddressBook** has composition with **Record** (a collection of contact entries).
 
 Logical errors
--------------
+--------------
 
 validate(value) should validate the instance value, not the value parameter.

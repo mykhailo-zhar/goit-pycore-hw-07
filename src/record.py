@@ -28,6 +28,9 @@ class Record:
     def name(self) -> Name:
         """
         Get the name of the record.
+
+        Returns:
+            Name: The name of the record.
         """
         return self._name
 

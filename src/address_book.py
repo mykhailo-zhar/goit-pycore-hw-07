@@ -41,3 +41,12 @@ class AddressBook:
         """
 
         return self.data.pop(name, None) is not None
+
+    def get_upcoming_birthdays(self) -> list[Record]:
+        """
+        Get the upcoming birthdays from the address book.
+
+        Returns:
+            list[Record]: The upcoming birthdays.
+        """
+        raise NotImplementedError()

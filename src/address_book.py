@@ -69,7 +69,9 @@ class AddressBook:
         self.__today = datetime.now()
 
         processed_records = [
-            ProcessedRecord(record, self.__today) for record in self.data.values()
+            ProcessedRecord(record, self.__today)
+            for record in self.data.values()
+            if record.birthday
         ]
 
         upcoming_birthdays = filter(

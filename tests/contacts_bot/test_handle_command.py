@@ -2,6 +2,8 @@ import pytest
 
 from src.scripts.contacts_bot import COMMAND_MESSAGES, handle_command
 
+VALID_BIRTHDAY = "01.01.1990"
+
 
 @pytest.mark.parametrize(
     "command,arguments,expected",
@@ -34,11 +36,21 @@ def test_handle_command_add_and_update_via_dispatch(
     assert empty_address_book.data["x"].phones[-1].value == last_valid_phone
 
 
+def test_handle_command_add_birthday_via_dispatch(book_with_contact):
+    assert handle_command(
+        book_with_contact, "add-birthday", ["JohnDoe", VALID_BIRTHDAY]
+    ) == COMMAND_MESSAGES["BIRTHDAY_ADDED"].format(
+        old_birthday=None, new_birthday=VALID_BIRTHDAY, name="JohnDoe"
+    )
+    assert book_with_contact.data["JohnDoe"].birthday.value == VALID_BIRTHDAY
+
+
 @pytest.mark.parametrize(
     "command,arguments,expected",
     [
         ("add", ["onlyone"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("update", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
+        ("add-birthday", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("phone", [], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("all", ["extra"], COMMAND_MESSAGES["INVALID_COMMAND"]),
     ],

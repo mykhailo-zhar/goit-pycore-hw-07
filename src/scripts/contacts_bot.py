@@ -100,13 +100,15 @@ def update_contact(book: AddressBook, arguments: list[str]) -> str:
 
     Returns:
         str: The response to the command.
+
+    Notes:
+        Replaces all the phones the user has with the current phone.
     """
-    if len(arguments) < 2:
+    if len(arguments) != 2:
         raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
-    name, *phones = arguments
+    name, phone = arguments
     record = Record(name)
-    for phone in phones:
-        record.add_phone(phone)
+    record.add_phone(phone)
 
     if not book.remove_record(name):
         raise ValueError(COMMAND_MESSAGES["NO_SUCH_USER"])

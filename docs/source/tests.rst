@@ -8,17 +8,10 @@ Subpackages
    :maxdepth: 4
 
    tests.fields
+   tests.address_book
 
 Submodules
 ----------
-
-tests.test\_address\_book module
---------------------------------
-
-.. automodule:: tests.test_address_book
-   :members:
-   :show-inheritance:
-   :undoc-members:
 
 tests.test\_record module
 -------------------------

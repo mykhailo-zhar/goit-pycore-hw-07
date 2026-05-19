@@ -4,6 +4,7 @@ from src.fields.field import Field
 
 
 class Birthday(Field):
+    DATE_FORMAT = "%d.%m.%Y"
     """
     Stores the contact birthday.
 
@@ -17,7 +18,7 @@ class Birthday(Field):
         """
 
         try:
-            datetime.strptime(self.value, "%d.%m.%Y")
+            datetime.strptime(self.value, self.DATE_FORMAT)
             return True
         except (ValueError, TypeError):
             return False

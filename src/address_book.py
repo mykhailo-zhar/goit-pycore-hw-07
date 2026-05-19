@@ -68,6 +68,7 @@ class AddressBook:
 
         self.__today = datetime.now()
 
+        # Records without birthday may cause a crash
         processed_records = [
             ProcessedRecord(record, self.__today)
             for record in self.data.values()

@@ -84,4 +84,4 @@ class AddressBook:
             upcoming_birthdays, key=lambda record: record.congratulation_date
         )
 
-        return map(lambda record: record.record, sorted_upcoming_birthdays)
+        return list(map(lambda record: record.record, sorted_upcoming_birthdays))

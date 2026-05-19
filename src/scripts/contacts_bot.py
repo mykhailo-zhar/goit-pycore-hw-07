@@ -16,6 +16,7 @@ COMMAND_MESSAGES = {
     "BIRTHDAY_ADDED": "Birthday added. Replacing {old_birthday} with {new_birthday} for {name}",
     "NO_BIRTHDAY_SET": "No birthday set for {name}",
     "BIRTHDAY_SHOWED": "Birthday for {name} is {birthday}",
+    "UPCOMING_BIRTHDAYS": "Upcoming birthdays:\n{birthdays}",
     "NO_SUCH_USER": "No such user",
     "PLEASE_CHANGE_USER": "Please change the user",
     "GOOD_BYE": "Good bye!",
@@ -196,6 +197,34 @@ def show_phone(book: AddressBook, arguments: list[str]) -> str:
 
 
 @input_error
+def birthdays(book: AddressBook, arguments: list[str] = []) -> str:
+    """
+    Show the birthdays of the contacts.
+
+    Args:
+        book (AddressBook): The book of contacts.
+        arguments (list[str]): The arguments to show the birthdays.
+
+    Returns:
+        str: The response to the command.
+    """
+    if arguments:
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    if not book.data:
+        raise ValueError(COMMAND_MESSAGES["NO_USERS"])
+    upcoming_birthdays = book.get_upcoming_birthdays()
+    return COMMAND_MESSAGES["UPCOMING_BIRTHDAYS"].format(
+        birthdays="\n".join(
+            "{birthday} {name}".format(
+                birthday=record.birthday.format(book.today),
+                name=record.name,
+            )
+            for record in upcoming_birthdays
+        )
+    )
+
+
+@input_error
 def show_all(book: AddressBook, arguments: list[str] = []) -> str:
     """
     Show all contacts.
@@ -257,6 +286,7 @@ def handle_command(book: AddressBook, command: str, arguments: list[str]) -> str
         "all": show_all,
         "add-birthday": add_birthday,
         "show-birthday": show_birthday,
+        "birthdays": birthdays,
         "exit": exit,
         "close": exit,
     }

@@ -28,3 +28,18 @@ def valid_phone(valid_phone_generator):
 def book_with_contact(empty_address_book, valid_phone):
     add_contact(empty_address_book, ["JohnDoe", valid_phone])
     return empty_address_book
+
+
+@pytest.fixture
+def valid_birthday_str():
+    return "01.01.1990"
+
+
+@pytest.fixture
+def new_valid_birthday_str():
+    return "02.02.1991"
+
+
+@pytest.fixture
+def invalid_birthday_str():
+    return "31.02.1990"

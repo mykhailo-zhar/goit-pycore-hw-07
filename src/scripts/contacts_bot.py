@@ -2,10 +2,10 @@ import sys
 from pathlib import Path
 
 if __name__ == "__main__":
-    sys.path.append(str(Path(__file__).parent.parent.parent.absolute()))
+    sys.path.append(str(Path(__file__).parent[3].absolute()))
 
 
-from src.validations import validate_name, validate_phone
+from src.helpers.validations import validate_name, validate_phone
 
 INVALID_COMMAND = "Invalid command."
 

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 def _validate_user_dict(user: dict) -> bool:
     """
     Validate the user dictionary.
@@ -10,9 +11,8 @@ def _validate_user_dict(user: dict) -> bool:
     Returns:
         True if the user dictionary is valid, False otherwise.
     """
-    return isinstance(user, dict) \
-           and "name" in user \
-           and "birthday" in user
+    return isinstance(user, dict) and "name" in user and "birthday" in user
+
 
 def _parse_users_birthdates(users: list[dict]) -> list[dict]:
     """
@@ -26,6 +26,7 @@ def _parse_users_birthdates(users: list[dict]) -> list[dict]:
     """
     return [_parse_user_birthdate(user) for user in users]
 
+
 def _parse_user_birthdate(user: dict) -> dict:
     """
     Parse the user's birthday to the congratulation date.
@@ -37,13 +38,16 @@ def _parse_user_birthdate(user: dict) -> dict:
         The parsed user.
     """
     parsed_user = dict(
-        user, 
-        congratulation_date=_transform_birthday_to_congratulation_date(user["birthday"])
+        user,
+        congratulation_date=_transform_birthday_to_congratulation_date(
+            user["birthday"]
+        ),
     )
 
     # Remove irrelevant birthday key
     parsed_user.pop("birthday")
     return parsed_user
+
 
 def _transform_birthday_to_congratulation_date(birthday: str) -> datetime:
     """
@@ -66,7 +70,8 @@ def _transform_birthday_to_congratulation_date(birthday: str) -> datetime:
         congratulation_date = congratulation_date + timedelta(days=7 - weekday)
 
     return congratulation_date
- 
+
+
 def _get_congratulated_users(parsed_users: list[dict]) -> list[dict]:
     """
     Present the users who need to be congratulated in the next 7 days.
@@ -81,8 +86,9 @@ def _get_congratulated_users(parsed_users: list[dict]) -> list[dict]:
     upcoming_birthdays = []
     for user in parsed_users:
         # Skip users whose congratulation date is not in the next 7 days
-        if user["congratulation_date"] < today \
-                or user["congratulation_date"] >= (today + timedelta(days=7)):
+        if user["congratulation_date"] < today or user["congratulation_date"] >= (
+            today + timedelta(days=7)
+        ):
             continue
 
         # Update the congratulation date to the format 'YYYY.MM.DD'
@@ -93,6 +99,7 @@ def _get_congratulated_users(parsed_users: list[dict]) -> list[dict]:
         upcoming_birthdays.append(parsed_user)
 
     return upcoming_birthdays
+
 
 def get_upcoming_birthdays(users: list[dict]) -> list[dict]:
     """
@@ -109,7 +116,7 @@ def get_upcoming_birthdays(users: list[dict]) -> list[dict]:
     """
     if not users:
         return []
-    
+
     if any(not _validate_user_dict(user) for user in users):
         raise ValueError(
             "Users must be a list of dictionaries with 'name' and 'birthday' keys"

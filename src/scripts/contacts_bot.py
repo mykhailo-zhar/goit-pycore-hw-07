@@ -1,4 +1,5 @@
 import sys
+from functools import wraps
 from pathlib import Path
 
 from src.record import Record
@@ -26,6 +27,11 @@ COMMAND_MESSAGES = {
 
 
 def input_error(func):
+    """
+    Decorator to handle input errors.
+    """
+
+    @wraps(func)
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)

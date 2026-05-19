@@ -9,6 +9,7 @@ Subpackages
 
    src.fields
    src.utils
+   src.scripts
 
 Submodules
 ----------

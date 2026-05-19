@@ -9,6 +9,7 @@ Subpackages
 
    tests.fields
    tests.address_book
+   tests.contacts_bot
 
 Submodules
 ----------

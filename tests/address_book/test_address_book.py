@@ -6,7 +6,7 @@ from src.record import Record
 
 @pytest.fixture
 def valid_name():
-    return "John Doe"
+    return "John"
 
 
 @pytest.fixture

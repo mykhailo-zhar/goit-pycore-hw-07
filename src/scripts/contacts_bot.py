@@ -120,6 +120,33 @@ def update_contact(book: AddressBook, arguments: list[str]) -> str:
 
 
 @input_error
+def add_birthday(book: AddressBook, arguments: list[str]) -> str:
+    """
+    Add a birthday to a contact.
+
+    Args:
+        book (AddressBook): The book of contacts.
+        arguments (list[str]): The arguments to add the birthday to the contact.
+
+    Returns:
+        str: The response to the command.
+    """
+    if len(arguments) != 2:
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    name, birthday = arguments
+    record = book.find_record(name)
+    if not record:
+        raise ValueError(COMMAND_MESSAGES["NO_SUCH_USER"])
+    old_birthday = record.birthday.value if record.birthday else None
+    record.add_birthday(birthday)
+    return COMMAND_MESSAGES["BIRTHDAY_ADDED"].format(
+        old_birthday=old_birthday,
+        new_birthday=birthday,
+        name=name,
+    )
+
+
+@input_error
 def show_phone(book: AddressBook, arguments: list[str]) -> str:
     """
     Show the phone number of a contact.

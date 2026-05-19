@@ -45,6 +45,16 @@ class AddressBook:
 
         return self.data.pop(name, None) is not None
 
+    @property
+    def today(self) -> datetime:
+        """
+        Get the today's date.
+
+        Returns:
+            datetime: The today's date.
+        """
+        return self.__today
+
     def get_upcoming_birthdays(self) -> list[Record]:
         """
         Get the upcoming birthdays from the address book.

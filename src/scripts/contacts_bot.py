@@ -1,13 +1,24 @@
 import sys
 from pathlib import Path
 
+from src.record import Record
+
 if __name__ == "__main__":
     sys.path.append(str(Path(__file__).parent[3].absolute()))
 
 
-from src.helpers.validations import validate_name, validate_phone
+from src.address_book import AddressBook
 
-INVALID_COMMAND = "Invalid command."
+COMMAND_MESSAGES = {
+    "INVALID_COMMAND": "Invalid command.",
+    "CONTACT_ADDED": "Contact added.",
+    "CONTACT_UPDATED": "Contact updated.",
+    "NO_SUCH_USER": "No such user",
+    "PLEASE_CHANGE_USER": "Please change the user",
+    "GOOD_BYE": "Good bye!",
+    "NO_USERS": "There are no users",
+    "HELLO": "How can I help you?",
+}
 
 
 def input_error(func):
@@ -48,100 +59,106 @@ def hello(arguments: list[str] = []) -> str:
         str: The hello message.
     """
     if arguments:
-        raise ValueError(INVALID_COMMAND)
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
 
-    return "How can I help you?"
+    return COMMAND_MESSAGES["HELLO"]
 
 
 @input_error
-def add_contact(book: dict[str, str], arguments: list[str]) -> str:
+def add_contact(book: AddressBook, arguments: list[str]) -> str:
     """
     Add a new contact.
 
     Args:
-        book (dict[str, str]): The book of contacts.
+        book (AddressBook): The book of contacts.
         arguments (list[str]): The arguments to add the contact.
 
     Returns:
         str: The response to the command.
     """
-    if len(arguments) != 2:
-        raise ValueError(INVALID_COMMAND)
-    name, phone = arguments
-    if not validate_name(name, no_spaces=True):
-        raise ValueError(INVALID_COMMAND)
-    if not validate_phone(phone):
-        raise ValueError(INVALID_COMMAND)
-    if name in book:
-        raise ValueError("Please change the user")
-    book.update({name: phone})
-    return "Contact added."
+    if len(arguments) < 2:
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    name, *phones = arguments
+    record = Record(name)
+    for phone in phones:
+        record.add_phone(phone)
+    if book.find_record(name):
+        raise ValueError(COMMAND_MESSAGES["PLEASE_CHANGE_USER"])
+    book.add_record(record)
+    return COMMAND_MESSAGES["CONTACT_ADDED"]
 
 
 @input_error
-def update_contact(book: dict[str, str], arguments: list[str]) -> str:
+def update_contact(book: AddressBook, arguments: list[str]) -> str:
     """
     Update a contact.
 
     Args:
-        book (dict[str, str]): The book of contacts.
+        book (AddressBook): The book of contacts.
         arguments (list[str]): The arguments to update the contact.
 
     Returns:
         str: The response to the command.
     """
-    if len(arguments) != 2:
-        raise ValueError(INVALID_COMMAND)
-    name, phone = arguments
-    if not validate_name(name, no_spaces=True):
-        raise ValueError(INVALID_COMMAND)
-    if not validate_phone(phone):
-        raise ValueError(INVALID_COMMAND)
-    if name not in book:
-        raise ValueError("No such user")
-    book.update({name: phone})
-    return "Contact updated."
+    if len(arguments) < 2:
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    name, *phones = arguments
+    record = Record(name)
+    for phone in phones:
+        record.add_phone(phone)
+
+    if not book.remove_record(name):
+        raise ValueError(COMMAND_MESSAGES["NO_SUCH_USER"])
+
+    book.add_record(record)
+
+    return COMMAND_MESSAGES["CONTACT_UPDATED"]
 
 
 @input_error
-def show_phone(book: dict[str, str], arguments: list[str]) -> str:
+def show_phone(book: AddressBook, arguments: list[str]) -> str:
     """
     Show the phone number of a contact.
 
     Args:
-        book (dict[str, str]): The book of contacts.
+        book (AddressBook): The book of contacts.
         arguments (list[str]): The arguments to show the phone number of the contact.
 
     Returns:
         str: The response to the command.
     """
     if len(arguments) != 1:
-        raise ValueError(INVALID_COMMAND)
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
     name = arguments[0]
-    if not validate_name(name, no_spaces=True):
-        raise ValueError(INVALID_COMMAND)
-
-    return book.get(name, "No such user")
+    record = book.find_record(name)
+    if not record:
+        raise ValueError(COMMAND_MESSAGES["NO_SUCH_USER"])
+    return "; ".join(phone.value for phone in record.phones)
 
 
 @input_error
-def show_all(book: dict[str, str], arguments: list[str] = []) -> str:
+def show_all(book: AddressBook, arguments: list[str] = []) -> str:
     """
     Show all contacts.
 
     Args:
-        book (dict[str, str]): The book of contacts.
+        book (AddressBook): The book of contacts.
         arguments (list[str]): The arguments to show all contacts.
 
     Returns:
         str: The response to the command.
     """
     if arguments:
-        raise ValueError(INVALID_COMMAND)
-    if not book:
-        raise ValueError("There are no users")
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    if not book.data:
+        raise ValueError(COMMAND_MESSAGES["NO_USERS"])
 
-    return f"Stored users ({len(book)}):\n{'\n'.join(f'{name}: {phone}' for name, phone in sorted(book.items()))}"
+    count_users = len(book.data)
+    users_list = [
+        f"{record.name}: {'; '.join(phone.value for phone in record.phones)}"
+        for _, record in sorted(book.data.items())
+    ]
+    return f"Stored users ({count_users}):\n{'\n'.join(users_list)}"
 
 
 @input_error
@@ -156,18 +173,18 @@ def exit(arguments: list[str] = []) -> str:
         str: The goodbye message.
     """
     if arguments:
-        raise ValueError(INVALID_COMMAND)
-    return "Good bye!"
+        raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
+    return COMMAND_MESSAGES["GOOD_BYE"]
 
 
-def handle_command(book: dict[str, str], command: str, arguments: list[str]) -> str:
+def handle_command(book: AddressBook, command: str, arguments: list[str]) -> str:
     """
     Handle the command.
 
     Args:
         command (str): The command to handle.
         arguments (list[str]): The arguments to the command.
-        book (dict[str, str]): The book of contacts.
+        book (AddressBook): The book of contacts.
 
     Returns:
         str: The response to the command.
@@ -189,14 +206,14 @@ def handle_command(book: dict[str, str], command: str, arguments: list[str]) -> 
         case "close":
             return exit(arguments)
         case _:
-            return INVALID_COMMAND
+            return COMMAND_MESSAGES["INVALID_COMMAND"]
 
 
 def main() -> None:
     """
     Main function.
     """
-    book: dict[str, str] = {}
+    book: AddressBook = AddressBook()
     while True:
         line = input()
         command, arguments = parse_input(line)

@@ -76,15 +76,16 @@ def add_contact(book: AddressBook, arguments: list[str]) -> str:
     Returns:
         str: The response to the command.
     """
-    if len(arguments) < 2:
+    if len(arguments) != 2:
         raise ValueError(COMMAND_MESSAGES["INVALID_COMMAND"])
-    name, *phones = arguments
+    name, phone = arguments
     record = Record(name)
-    for phone in phones:
+    if record := book.find_record(name):
         record.add_phone(phone)
-    if book.find_record(name):
-        raise ValueError(COMMAND_MESSAGES["PLEASE_CHANGE_USER"])
-    book.add_record(record)
+    else:
+        record = Record(name)
+        record.add_phone(phone)
+        book.add_record(record)
     return COMMAND_MESSAGES["CONTACT_ADDED"]
 
 

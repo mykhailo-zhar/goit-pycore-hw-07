@@ -86,3 +86,23 @@ def test_record_edit_non_existent_phone(record, valid_phone):
 def test_record_edit_invalid_phone(record, valid_phone, invalid_phone):
     with pytest.raises(ValueError):
         record.edit_phone(valid_phone.value, invalid_phone.value)
+
+
+def test_fresh_record_has_no_birthday(record):
+    assert record.birthday is None
+
+
+def test_record_add_birthday(record):
+    record.add_birthday("10.01.1990")
+    assert record.birthday.value == "10.01.1990"
+
+
+def test_record_add_invalid_birthday(record):
+    with pytest.raises(ValueError):
+        record.add_birthday("10.13.1990")
+
+
+def test_record_add_birthday_to_existing_record(record):
+    record.add_birthday("10.01.1990")
+    record.add_birthday("11.01.1990")
+    assert record.birthday.value == "11.01.1990"

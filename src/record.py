@@ -1,3 +1,4 @@
+from src.fields.birthday import Birthday
 from src.fields.name import Name
 from src.fields.phone import Phone
 
@@ -17,11 +18,77 @@ class Record:
         Raises:
             ValueError: If the name is not valid.
         """
+        self.name = name
+        self._phones = []
+        self._birthday = None
+
+    # region Properties
+
+    @property
+    def name(self) -> Name:
+        """
+        Get the name of the record.
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """
+        Set the name of the record.
+
+        Args:
+            name: The name to set.
+
+        Raises:
+            ValueError: If the name is not valid.
+        """
         name_obj = Name(name)
         if not name_obj.validate():
             raise ValueError("Name is required")
-        self.name = name_obj
-        self.phones = []
+        self._name = name_obj
+
+    @property
+    def birthday(self) -> Birthday | None:
+        """
+        Get the birthday of the record.
+
+        Returns:
+            Birthday | None: The birthday of the record.
+        """
+        return self._birthday
+
+    @birthday.setter
+    def birthday(self, birthday):
+        """
+        Set the birthday of the record.
+        """
+        birthday_obj = Birthday(birthday)
+        if not birthday_obj.validate():
+            raise ValueError(f"Birthday {birthday} is not valid")
+        self._birthday = birthday_obj
+
+    @property
+    def phones(self) -> list[Phone]:
+        """
+        Get the phones of the record.
+        """
+        return self._phones
+
+    # endregion
+
+    # region Methods
+
+    def add_birthday(self, birthday: str):
+        """
+        Add a birthday to the record.
+
+        Args:
+            birthday (str): The birthday to add.
+
+        Raises:
+            ValueError: If the birthday is not valid.
+        """
+        self.birthday = birthday
 
     def add_phone(self, phone: str):
         """
@@ -93,6 +160,8 @@ class Record:
             raise ValueError(PHONE_NOT_VALID_ERROR)
 
         self.phones[phone_index] = new_phone_obj
+
+    # endregion
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"

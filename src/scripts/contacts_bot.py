@@ -49,11 +49,12 @@ def parse_input(line: str) -> tuple[str, list[str]]:
 
 
 @input_error
-def hello(arguments: list[str] = []) -> str:
+def hello(_: AddressBook, arguments: list[str] = []) -> str:
     """
     Print the hello message.
 
     Args:
+        _ (AddressBook): The book of contacts.
         arguments (list[str]): The arguments to the hello command.
 
     Returns:
@@ -193,11 +194,12 @@ def show_all(book: AddressBook, arguments: list[str] = []) -> str:
 
 
 @input_error
-def exit(arguments: list[str] = []) -> str:
+def exit(_: AddressBook, arguments: list[str] = []) -> str:
     """
     Exit the program.
 
     Args:
+        _ (AddressBook): The book of contacts.
         arguments (list[str], optional): The arguments to the exit command. Defaults to [].
 
     Returns:
@@ -220,24 +222,21 @@ def handle_command(book: AddressBook, command: str, arguments: list[str]) -> str
     Returns:
         str: The response to the command.
     """
+    commands = {
+        "hello": hello,
+        "add": add_contact,
+        "update": update_contact,
+        "phone": show_phone,
+        "all": show_all,
+        "add-birthday": add_birthday,
+        "exit": exit,
+        "close": exit,
+    }
 
-    match command:
-        case "hello":
-            return hello(arguments)
-        case "add":
-            return add_contact(book, arguments)
-        case "update":
-            return update_contact(book, arguments)
-        case "phone":
-            return show_phone(book, arguments)
-        case "all":
-            return show_all(book, arguments)
-        case "exit":
-            return exit(arguments)
-        case "close":
-            return exit(arguments)
-        case _:
-            return COMMAND_MESSAGES["INVALID_COMMAND"]
+    if command not in commands:
+        return COMMAND_MESSAGES["INVALID_COMMAND"]
+
+    return commands[command](book, arguments)
 
 
 def main() -> None:

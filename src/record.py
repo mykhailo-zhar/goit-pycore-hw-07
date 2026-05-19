@@ -150,7 +150,7 @@ class Record:
 
         Args:
             old_phone (_type_): The old phone number to edit.
-            new_phone (_type_): The new phone number to edit.
+            new_phone (_type_): The new phone number to insert.
 
         Raises:
             ValueError: If the old phone number is not found.

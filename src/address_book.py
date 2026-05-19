@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from src.record import Record
+from src.utils.processed_record import ProcessedRecord
 
 
 class AddressBook:
@@ -47,6 +50,25 @@ class AddressBook:
         Get the upcoming birthdays from the address book.
 
         Returns:
-            list[Record]: The upcoming birthdays.
+            list[Record]: List of upcoming birthdays sorted by congratulation date.
         """
-        raise NotImplementedError()
+
+        if not self.data:
+            return []
+
+        self.__today = datetime.now()
+
+        processed_records = [
+            ProcessedRecord(record, self.__today) for record in self.data.values()
+        ]
+
+        upcoming_birthdays = filter(
+            ProcessedRecord.is_congratulation_date_in_next_7_days(self.__today),
+            processed_records,
+        )
+
+        sorted_upcoming_birthdays = sorted(
+            upcoming_birthdays, key=lambda record: record.congratulation_date
+        )
+
+        return map(lambda record: record.record, sorted_upcoming_birthdays)

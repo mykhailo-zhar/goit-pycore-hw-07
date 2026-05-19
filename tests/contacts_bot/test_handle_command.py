@@ -1,4 +1,5 @@
 import pytest
+import time_machine
 
 from src.scripts.contacts_bot import COMMAND_MESSAGES, handle_command
 
@@ -57,6 +58,16 @@ def test_handle_command_show_birthday_via_dispatch(
     )
 
 
+def test_handle_command_birthdays_via_dispatch(empty_address_book):
+    with time_machine.travel("2026-05-19"):
+        handle_command(empty_address_book, "add", ["Alice", "1234567890"])
+        handle_command(empty_address_book, "add-birthday", ["Alice", "20.05.1990"])
+
+        assert "20.05.2026 (Wednesday) Alice" in handle_command(
+            empty_address_book, "birthdays", []
+        )
+
+
 @pytest.mark.parametrize(
     "command,arguments,expected",
     [
@@ -64,6 +75,7 @@ def test_handle_command_show_birthday_via_dispatch(
         ("update", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("add-birthday", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("show-birthday", [], COMMAND_MESSAGES["INVALID_COMMAND"]),
+        ("birthdays", ["extra"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("phone", [], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("all", ["extra"], COMMAND_MESSAGES["INVALID_COMMAND"]),
     ],

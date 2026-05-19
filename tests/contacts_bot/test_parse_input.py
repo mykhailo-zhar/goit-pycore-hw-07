@@ -21,6 +21,7 @@ from tests.contacts_bot.shared import INVALID_PHONE_12, INVALID_PHONE_15
             ["JohnDoe", "01.01.1990"],
         ),
         ("show-birthday JohnDoe", "show-birthday", ["JohnDoe"]),
+        ("birthdays", "birthdays", []),
         ("Phone Eve", "phone", ["Eve"]),
         ("PhOnE Frank", "phone", ["Frank"]),
         ("all", "all", []),

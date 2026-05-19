@@ -15,7 +15,7 @@ DATE_FORMAT = "%d.%m.%Y"
 def users() -> list[dict]:
     return [
         {
-            "name": f"John Doe {i}",
+            "name": f"JohnDoe{i}",
             "birthday": (datetime.now() + relativedelta(days=i, years=-25)).strftime(
                 DATE_FORMAT
             ),

@@ -45,6 +45,16 @@ class AddressBook:
 
         return self.data.pop(name, None) is not None
 
+    @property
+    def today(self) -> datetime:
+        """
+        Get the today's date.
+
+        Returns:
+            datetime: The today's date.
+        """
+        return self.__today
+
     def get_upcoming_birthdays(self) -> list[Record]:
         """
         Get the upcoming birthdays from the address book.
@@ -58,8 +68,11 @@ class AddressBook:
 
         self.__today = datetime.now()
 
+        # Records without birthday may cause a crash
         processed_records = [
-            ProcessedRecord(record, self.__today) for record in self.data.values()
+            ProcessedRecord(record, self.__today)
+            for record in self.data.values()
+            if record.birthday
         ]
 
         upcoming_birthdays = filter(
@@ -71,4 +84,4 @@ class AddressBook:
             upcoming_birthdays, key=lambda record: record.congratulation_date
         )
 
-        return map(lambda record: record.record, sorted_upcoming_birthdays)
+        return list(map(lambda record: record.record, sorted_upcoming_birthdays))

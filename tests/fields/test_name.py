@@ -24,8 +24,10 @@ def test_name_str():
         (10, False),
         ("", False),
         (None, False),
-        ("John Doe", True),
-        ("John Doe1", True),
+        ("John Doe", False),
+        ("John Doe1", False),
+        ("JohnDoe1", True),
+        ("John", True),
     ],
 )
 def test_name_validate(name, is_valid):

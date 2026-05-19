@@ -1,3 +1,5 @@
+import re
+
 from ..fields.field import Field
 
 
@@ -16,4 +18,8 @@ class Name(Field):
         Returns:
             bool: True if the name is valid, False otherwise.
         """
-        return isinstance(self.value, str) and self.value != ""
+        return (
+            isinstance(self.value, str)
+            and self.value != ""
+            and re.match(r"^\w+$", self.value) is not None
+        )

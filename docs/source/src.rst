@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    src.fields
+   src.utils
 
 Submodules
 ----------

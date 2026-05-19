@@ -13,8 +13,8 @@ class ProcessedRecord:
     Processed record.
 
     Args:
-        record: The record to process.
-        today: The today's date.
+        record (Record): The record to process.
+        today (datetime): The today's date.
     """
 
     record: Record
@@ -25,8 +25,8 @@ class ProcessedRecord:
         Initialize the processed record.
 
         Args:
-            record: The record to process.
-            today: The today's date.
+            record (Record): The record to process.
+            today (datetime): The today's date.
         """
         self.__record = record
         self.__today = today

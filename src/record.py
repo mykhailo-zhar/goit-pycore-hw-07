@@ -5,6 +5,10 @@ from src.fields.phone import Phone
 PHONE_NOT_FOUND_ERROR = "Phone not found"
 PHONE_NOT_VALID_ERROR = "Phone is not valid"
 PHONE_ALREADY_EXISTS_ERROR = "Phone already exists"
+NAME_NOT_VALID_ERROR = "Name is not valid, must be a non-empty alphanumeric string"
+BIRTHDAY_NOT_VALID_ERROR = (
+    "Birthday {birthday} is not valid, must be in the format DD.MM.YYYY"
+)
 
 
 class Record:
@@ -47,7 +51,7 @@ class Record:
         """
         name_obj = Name(name)
         if not name_obj.validate():
-            raise ValueError("Name is required")
+            raise ValueError(NAME_NOT_VALID_ERROR)
         self._name = name_obj
 
     @property
@@ -67,7 +71,7 @@ class Record:
         """
         birthday_obj = Birthday(birthday)
         if not birthday_obj.validate():
-            raise ValueError(f"Birthday {birthday} is not valid")
+            raise ValueError(BIRTHDAY_NOT_VALID_ERROR.format(birthday=birthday))
         self._birthday = birthday_obj
 
     @property

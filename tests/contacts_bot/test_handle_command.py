@@ -45,12 +45,25 @@ def test_handle_command_add_birthday_via_dispatch(
     assert book_with_contact.data["JohnDoe"].birthday.value == valid_birthday_str
 
 
+def test_handle_command_show_birthday_via_dispatch(
+    book_with_contact, valid_birthday_str
+):
+    handle_command(book_with_contact, "add-birthday", ["JohnDoe", valid_birthday_str])
+
+    assert handle_command(
+        book_with_contact, "show-birthday", ["JohnDoe"]
+    ) == COMMAND_MESSAGES["BIRTHDAY_SHOWED"].format(
+        name="JohnDoe", birthday=valid_birthday_str
+    )
+
+
 @pytest.mark.parametrize(
     "command,arguments,expected",
     [
         ("add", ["onlyone"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("update", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("add-birthday", ["x"], COMMAND_MESSAGES["INVALID_COMMAND"]),
+        ("show-birthday", [], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("phone", [], COMMAND_MESSAGES["INVALID_COMMAND"]),
         ("all", ["extra"], COMMAND_MESSAGES["INVALID_COMMAND"]),
     ],

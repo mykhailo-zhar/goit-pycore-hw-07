@@ -15,7 +15,12 @@ from tests.contacts_bot.shared import INVALID_PHONE_12, INVALID_PHONE_15
         (f"aDd Bob {INVALID_PHONE_15}", "add", ["Bob", INVALID_PHONE_15]),
         (f"upDaTe carol {INVALID_PHONE_12}", "update", ["carol", INVALID_PHONE_12]),
         (f"UpDaTe dave {INVALID_PHONE_12}", "update", ["dave", INVALID_PHONE_12]),
-        ("add-birthday JohnDoe 01.01.1990", "add-birthday", ["JohnDoe", "01.01.1990"]),
+        (
+            "add-birthday JohnDoe 01.01.1990",
+            "add-birthday",
+            ["JohnDoe", "01.01.1990"],
+        ),
+        ("show-birthday JohnDoe", "show-birthday", ["JohnDoe"]),
         ("Phone Eve", "phone", ["Eve"]),
         ("PhOnE Frank", "phone", ["Frank"]),
         ("all", "all", []),

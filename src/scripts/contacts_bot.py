@@ -13,6 +13,7 @@ COMMAND_MESSAGES = {
     "INVALID_COMMAND": "Invalid command.",
     "CONTACT_ADDED": "Contact added.",
     "CONTACT_UPDATED": "Contact updated.",
+    "BIRTHDAY_ADDED": "Birthday added. Replacing {old_birthday} with {new_birthday} for {name}",
     "NO_SUCH_USER": "No such user",
     "PLEASE_CHANGE_USER": "Please change the user",
     "GOOD_BYE": "Good bye!",

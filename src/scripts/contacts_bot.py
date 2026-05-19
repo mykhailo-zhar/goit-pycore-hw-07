@@ -35,7 +35,7 @@ def input_error(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (ValueError, TypeError, IndexError) as e:
+        except (ValueError, TypeError, IndexError, KeyError) as e:
             return str(e)
 
     return wrapper

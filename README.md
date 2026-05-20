@@ -1,66 +1,115 @@
-# Summary
+# goit-pycore-hw-07
 
-It is a template for GoIT python homework project with following tools:
+GoIT Python core homework: a **contact helper bot** built with OOP (`Record`, `AddressBook`, typed `Field` subclasses for name, phone, and birthday). Data lives in memory for the session. The CLI lives in [`src/scripts/contacts_bot.py`](src/scripts/contacts_bot.py); [`main.py`](main.py) is the app entry point.
 
-- [mise](https://mise.jdx.dev/) for tool versions and overall configuration
+Tooling around the project (unchanged):
+
+- [mise](https://mise.jdx.dev/) for tool versions and tasks
 - [uv](https://docs.astral.sh/uv/) for dependencies and the virtual environment
-- [pytest](https://pytest.org/) for tests 
+- [pytest](https://pytest.org/) for tests
 - [ruff](https://docs.astral.sh/ruff/) for linting
-- [Sphinx](https://www.sphinx-doc.org/) for documentation.
+- [Sphinx](https://www.sphinx-doc.org/) for documentation
+
+**CI:** pull requests and pushes to `main` / `master` run tests via [`.github/workflows/tests.yml`](.github/workflows/tests.yml).
+
+## Features
+
+- **Contacts:** add phone numbers, update a contact’s phones, list one user’s phones or all users.
+- **Birthdays:** store `DD.MM.YYYY` per contact, show one contact’s birthday, list upcoming birthdays (next 7 days) using weekend-adjusted “congratulation” dates from `AddressBook.get_upcoming_birthdays()`.
+- **Input:** commands are case-insensitive; the first token is the command, the rest are arguments (whitespace-separated).
+- **Errors:** invalid input and domain errors are turned into user-visible strings (via `input_error`); unknown commands get `Invalid command.`.
+
+## Run the bot
+
+From the repository root (after `uv sync`):
+
+```bash
+uv run python main.py
+```
+
+Or:
+
+```bash
+uv run python -m src.scripts.contacts_bot
+```
+
+Type one command per line; the bot prints the reply and waits for the next line until you run `exit` or `close`.
+
+## Command reference
+
+| Command | Syntax | Typical success reply | Notes |
+|--------|--------|------------------------|--------|
+| **hello** | `hello` | `How can I help you?` | No extra arguments. |
+| **add** | `add <name> <phone>` | `Contact added.` | Phone must be **10 digits**. If the name already exists, another phone is added to that contact. |
+| **update** | `update <name> <phone>` | `Contact updated.` | Replaces phones for that user with the given phone. `No such user` if missing. |
+| **phone** | `phone <name>` | Phone number(s), joined with `; ` | `No such user` if missing. |
+| **all** | `all` | `Stored users (<n>):` then lines `Name: phone; phone` | `There are no users` if the book is empty. |
+| **add-birthday** | `add-birthday <name> <DD.MM.YYYY>` | Birthday confirmation message | `No such user` if missing. Invalid date → validation error text. |
+| **show-birthday** | `show-birthday <name>` | `Birthday for <name> is <DD.MM.YYYY>` | `No such user` or `No birthday set for <name>` when applicable. |
+| **birthdays** | `birthdays` | `Upcoming birthdays:` then lines **`<DD.MM.YYYY> (<Weekday>) <Name>`** | `There are no users` if the book is empty. No arguments. |
+| **exit** / **close** | `exit` or `close` | `Good bye!` | Ends the session. No arguments. |
+
+**Birthday format:** `DD.MM.YYYY` (see [`src/fields/birthday.py`](src/fields/birthday.py)).
 
 ## Prerequisites
 
 - [mise](https://mise.jdx.dev/getting-started.html) installed and activated in your shell (for example `eval "$(mise activate bash)"` for Bash).
 
-Python is pinned via [mise.toml](mise.toml) (default **3.12**, overridable with `PYTHON_VERSION`). The repo also carries `[.python-version](.python-version)` for tooling that reads it.
+Python is pinned via [mise.toml](mise.toml) (default **3.12**, overridable with `PYTHON_VERSION`). The repo also carries [.python-version](.python-version) for tooling that reads it.
 
 ## Quick start
 
 1. **Trust and install tools** (from the repo root):
-  ```bash
+
+   ```bash
    mise trust
    mise install
-  ```
-   This installs **Python**, **uv**, and **ruff**, and with `python.uv_venv_auto` manages `[.venv](.venv)`.
+   ```
+
+   This installs **Python**, **uv**, and **ruff**, and with `python.uv_venv_auto` manages [.venv](.venv).
+
 2. **Install dependencies** (from [pyproject.toml](pyproject.toml) + [uv.lock](uv.lock)):
-  ```bash
+
+   ```bash
    uv sync
-  ```
-   Equivalent convenience task:
+   ```
+
+   Equivalent: `mise run install-dependencies` (alias `mise run id` per [mise.toml](mise.toml)).
+
 3. **Add a new dependency** (updates `pyproject.toml` and `uv.lock`):
-  ```bash
+
+   ```bash
    uv add <package>
-  ```
+   ```
+
    Or use the mise task (see `mise run install --help` for argument passing on your mise version).
 
 ## Layout
 
-- `**src/**` - application code (document with docstrings; Sphinx autodoc is configured in [docs/source/conf.py](docs/source/conf.py) with the project root and `src/` on `sys.path`).
-- `**tests/**` - tests; run with pytest.
-- `**docs/**` - documentation; generated by Sphinx.
+- **`src/`** — application code (document with docstrings; Sphinx autodoc is configured in [docs/source/conf.py](docs/source/conf.py) with the project root and `src/` on `sys.path`).
+- **`tests/`** — tests; run with pytest.
+- **`docs/`** — documentation; generated by Sphinx.
 
 ## Common commands
 
+| Goal | Command |
+|------|---------|
+| Run tests | `mise run test` or `uv run pytest tests/` |
+| Lint `src/` | `mise run lint` |
+| Project / venv info | `mise run info` |
+| Regenerate Sphinx API stubs | `mise run generate-docs` (`mise run gd`) |
+| Build HTML docs | `mise run build-docs` (`mise run bd`) |
 
-| Goal                        | Command                                   |
-| --------------------------- | ----------------------------------------- |
-| Run tests                   | `mise run test` or `uv run pytest tests/` |
-| Lint `src/`                 | `mise run lint`                           |
-| Project / venv info         | `mise run info`                           |
-| Regenerate Sphinx API stubs | `mise run generate-docs` (`mise run gd`)  |
-| Build HTML docs             | `mise run build-docs` (`mise run bd`)     |
-
-
-HTML output goes to `**docs/build/**` (open `docs/build/index.html` after a build).
+HTML output goes to **`docs/build/`** (open `docs/build/index.html` after a build).
 
 After `sphinx-apidoc` adds `.rst` files under [docs/source](docs/source), include them in the `toctree` in [docs/source/index.rst](docs/source/index.rst) so they appear in the built site.
 
 ## Workflow
 
-1. Configure mise and run `**uv sync**`.
-2. Implement code under `**src/**` and tests under `**tests/**`, using docstrings where useful.
-3. Run `**mise run lint**` and `**mise run test**`.
-4. Run `**mise run generate-docs**` then `**mise run build-docs**` when you want refreshed API documentation.
+1. Configure mise and run **`uv sync`**.
+2. Implement code under **`src/`** and tests under **`tests/`**, using docstrings where useful.
+3. Run **`mise run lint`** and **`mise run test`**.
+4. Run **`mise run generate-docs`** then **`mise run build-docs`** when you want refreshed API documentation.
 
 ## License
 
